@@ -1,0 +1,69 @@
+---
+    - name: PHP - disable default PHP
+      shell: yum module disable php -y
+      args:
+        warn: no
+
+    - name: PHP - Import remi GPG key.
+      rpm_key:
+        key: https://rpms.remirepo.net/RPM-GPG-KEY-remi2018
+        state: present
+
+    - name: PHP - install REMI repo
+      yum:
+        name:
+          - https://rpms.remirepo.net/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
+        state: present
+        update_cache: yes
+
+    - name: enable PHP version
+      shell: yum module enable php:remi-{{ php_version }} php -y
+      args:
+        warn: no
+
+    - name: PHP - Install Packages
+      yum:
+        name:
+          # - mod_php{{ php_version }}
+          # - php{{ php_version }}-bcmath
+          # - php{{ php_version }}-cli
+          # - php{{ php_version }}-common
+          # - php{{ php_version }}-fpm
+          # - php{{ php_version }}-gd
+          # - php{{ php_version }}-intl
+          # - php{{ php_version }}-json
+          # - php{{ php_version }}-ldap
+          # - php{{ php_version }}-mbstring
+          # - php{{ php_version }}-mcrypt
+          # - php{{ php_version }}-mysqlnd
+          # - php{{ php_version }}-opcache
+          # - php{{ php_version }}-pear
+          # - php{{ php_version }}-pecl-memcached
+          # - php{{ php_version }}-pecl-redis
+          # - php{{ php_version }}-process
+          # - php{{ php_version }}-pspell
+          # - php{{ php_version }}-soap
+          # - php{{ php_version }}-xml
+          # - php{{ php_version }}-xmlrpc
+          - php-bcmath
+          - php-cli
+          - php-common
+          - php-fpm
+          - php-gd
+          - php-intl
+          - php-json
+          - php-ldap
+          - php-mbstring
+          - php-mcrypt
+          - php-mysqlnd
+          - php-opcache
+          - php-pear
+          - php-pecl-memcached
+          - php-pecl-redis
+          - php-process
+          - php-pspell
+          - php-soap
+          - php-xml
+          - php-xmlrpc
+        state: latest
+        update_cache: yes

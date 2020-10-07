@@ -1,0 +1,35 @@
+---
+
+    - name: Create swap file
+      command: dd if=/dev/zero of={{ swapfile_path }} bs=1024 count={{ swapfile_size }}k
+      register: write_swapfile
+      args:
+        creates: "{{ swapfile_path }}"
+
+    - name: Change swap file permissions
+      file:
+        path: "{{ swapfile_path }}"
+        owner: root
+        group: root
+        mode: 0600
+      when: write_swapfile.changed
+
+    - name: Make swap file
+      command: mkswap {{ swapfile_path }}
+      register: make_swapfile
+      when: write_swapfile.changed
+
+    - name: Enable swap
+      command: swapon {{ swapfile_path }}
+      when: make_swapfile.changed
+
+    - name: Write swap entry in fstab
+      mount:
+        path: none
+        src: "{{ swapfile_path }}"
+        fstype: swap
+        opts: sw
+        passno: 0
+        dump: 0
+        state: present
+      when: make_swapfile.changed

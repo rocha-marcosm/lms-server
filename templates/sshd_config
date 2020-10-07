@@ -1,0 +1,26 @@
+ChallengeResponseAuthentication no
+PasswordAuthentication no
+PermitRootLogin no
+Port 22
+PrintMotd no
+Protocol 2
+PubkeyAuthentication yes
+UseDNS no
+UsePAM yes
+X11Forwarding no
+
+Subsystem sftp internal-sftp -u 0022
+
+Match Group sftpusers
+  ChrootDirectory {{ data_folder }}/%u
+  AllowTCPForwarding no
+  X11Forwarding no
+  ForceCommand internal-sftp -f LOCAL5 -l INFO
+  PasswordAuthentication yes
+
+#Match user lambda
+#  ChrootDirectory {{ data_folder }}
+#  AllowTCPForwarding no
+#  X11Forwarding no
+#  ForceCommand internal-sftp -f LOCAL5 -l INFO
+#  PasswordAuthentication yes

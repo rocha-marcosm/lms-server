@@ -1,0 +1,22 @@
+---
+    - name: moosh folder
+      file:
+        path: /usr/share/moosh/
+        state: directory
+
+    - name: download moosh
+      git:
+        repo: git://github.com/tmuras/moosh.git
+        dest: /usr/share/moosh
+
+    - name: moosh install
+      shell: /usr/local/sbin/composer install
+      args:
+        chdir: /usr/share/moosh/
+        creates: /usr/share/moosh/composer.lock
+
+    - name: moosh symbolic link
+      file:
+        src: /usr/share/moosh/moosh.php
+        dest: /usr/local/sbin/moosh
+        state: link

@@ -1,0 +1,31 @@
+---
+
+    - name: selinux - http network connection
+      seboolean:
+        name: httpd_can_network_connect
+        state: yes
+        persistent: yes
+
+    - name: selinux - http database connection
+      seboolean:
+        name: httpd_can_network_connect_db
+        state: yes
+        persistent: yes
+
+    - name: selinux - http send mail
+      seboolean:
+        name: httpd_can_sendmail
+        state: yes
+        persistent: yes
+
+    - name: selinux - http connect ldap
+      seboolean:
+        name: httpd_can_connect_ldap
+        state: yes
+        persistent: yes
+
+    - name: selinux - http connect nfs
+      seboolean:
+        name: httpd_use_nfs
+        state: yes
+        persistent: yes

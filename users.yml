@@ -1,0 +1,15 @@
+---
+
+    - name: Add user sysop
+      user:
+        name: sysop
+        groups: wheel
+        append: yes
+        shell: /bin/bash
+        state: present
+
+    - name: Add Authorized Key
+      authorized_key:
+        user: sysop
+        key: "{{ public_key }}"
+        state: present

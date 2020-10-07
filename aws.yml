@@ -1,0 +1,82 @@
+---
+
+    - name: AWS - install packages dependencies
+      yum:
+        name:
+          - python2-pip
+          - python-wheel
+          - kernel-devel
+        state: latest
+      when: '"amazon" in ansible_product_version'
+
+    - name: AWS - install aws cli
+      command: pip install awscli
+      when: '"amazon" in ansible_product_version'
+
+    - name: AWS - check ixgbevf
+      command: dkms status -m ixgbevf
+      register: check_ixgbevf
+
+    - name: AWS - check ixgbevf debug
+      debug: msg="{{ check_ixgbevf.stdout }}"
+
+    - name: AWS - download driver
+      unarchive:
+        src: files/ixgbevf-{{ ixgbevf_version }}.tar.gz
+        dest: /usr/src/
+        creates: /usr/src/ixgbevf-{{ ixgbevf_version }}
+      when: '"amazon" in ansible_product_version'
+
+    - name: AWS - Install dkms.conf
+      template:
+        src: dkms.conf
+        dest: /usr/src/ixgbevf-{{ ixgbevf_version }}/dkms.conf
+
+    - name: AWS - Add module via dkms
+      command: dkms add -m ixgbevf -v "{{ ixgbevf_version }}"
+      register: add_aws_module
+      when: check_ixgbevf.stdout == ""
+
+    - name: AWS - Build module via dkms
+      command: dkms build -m ixgbevf -v "{{ ixgbevf_version }}"
+      register: build_aws_module
+      when: add_aws_module.changed
+
+    - name: AWS - Install module via dkms
+      command: dkms install -m ixgbevf -v "{{ ixgbevf_version }}"
+      register: install_aws_module
+      when: build_aws_module.changed
+
+    - name: AWS - update module dependencies
+      command: depmod
+      when: install_aws_module.changed
+
+    - name: AWS - rebuild boot initramfs
+      command: dracut -f
+      register: rebuild_initramfs
+      when: install_aws_module.changed
+
+    - name: AWS - update grub
+      command: grub2-mkconfig -o /boot/grub2/grub.cfg
+      register: upudate_grub
+      when: rebuild_initramfs.changed
+
+    - name: AWS - Reboot
+      shell: sleep 2 && shutdown -r now
+      async: 1
+      poll: 0
+      register: aws_reboot
+      when: upudate_grub.changed
+
+    - name: AWS - wait host to Reboot
+      wait_for_connection:
+        delay: 5
+        timeout: 300
+      when: aws_reboot.changed
+
+    - name: AWS - cloudwatch monitoring - cron entry
+      cron:
+        name: cloudwatch monitoring
+        minute: "*/5"
+        job: "/root/scripts/aws-scripts-mon/mon-put-instance-data.pl --mem-util --swap-util --disk-path=/var/www/data/ --disk-space-util --from-cron"
+        disabled: yes

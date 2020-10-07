@@ -1,0 +1,61 @@
+---
+
+    - name: Upgrade Packages
+      yum:
+        name: '*'
+        state: latest
+        update_cache: yes
+      register: update_packages
+
+    - name: disable default MySQL
+      shell: yum module disable mysql -y
+      args:
+        warn: no
+
+    - name: Install Packages
+      yum:
+        name:
+          - "@Development tools"
+          - rsync
+          - git
+          - zip
+          - unzip
+          - vim
+          - htop
+          - vnstat
+          # - tmux
+          # - mc
+          - mysql-community-client
+          - cups
+          - ghostscript
+          # - ghostscript-cups # ???
+          # - duplicity
+          - clamav
+          - clamav-update
+          - yum-utils
+          - telnet
+          - screen
+          - wget
+          - dkms
+        state: latest
+        update_cache: yes
+
+    - name: Packages - selinux for antivirus
+      seboolean:
+        name: antivirus_can_scan_system
+        state: yes
+        persistent: yes
+
+    - name: Packages - Reboot
+      shell: sleep 2 && shutdown -r now
+      async: 1
+      poll: 0
+      register: packages_reboot
+      when: update_packages.changed
+      # ignore_errors: true
+
+    - name: Packages - wait host to Reboot
+      wait_for_connection:
+        delay: 10
+        timeout: 300
+      when: packages_reboot.changed

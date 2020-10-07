@@ -1,0 +1,36 @@
+---
+- hosts: remote
+
+  tasks:
+
+   - include: repos.yml
+   - include: packages.yml
+   - include: swap.yml
+   - include: users.yml
+   - include: iptables.yml
+   - include: php.yml
+   - include: composer.yml
+   # - include: moosh.yml
+   # - include: aws.yml
+  #    when: '"amazon" in ansible_product_version'
+   - include: nginx.yml
+  #  - include: solr.yml
+  #  - include: unoconv-server.yml
+   - include: fail2ban.yml
+
+   - name: data folder
+     file:
+       path: "{{ data_folder }}"
+       state: directory
+
+   - name: sshd config
+     template:
+       src: sshd_config
+       dest: /etc/ssh/sshd_config
+     register: sshd_config
+
+   - name: restart sshd
+     service:
+       name: sshd
+       state: restarted
+     when: sshd_config.changed
