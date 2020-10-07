@@ -10,7 +10,7 @@
   #chroot
     data_folder: /var/www/data
   #users
-    public_key: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC6o9e0yYVVWQ/kt0n7bJGXr8gsG6CXAZoICCxZUzhegkstxjp04JniTl8pgk0o0g+g7SvBngMBMuVZFyS+LP8rWkMllqzK1P17+t3EXf8YlOr9/vHnZzG5RJ5ykg1limqRCLY9NMqysybO0NrSkLO5Yxo5gCsmDu9KLUVzSq+fiRA4hsW96w6CNbCneHToIEuQLg3DgdREgBotXbB+JeW+XyUDeel69hkq3qKZ78zhIyBTEflfSu+shxrLggnuNfXJvG6UAvbRSBiqp7DBSUf95FPiDRdQL9f69VzXbkyx6qRA+fbzg5a8xZlAQB25McgteihvapJ2TfBxKLpyXa4hWzU9diZkQUcreXc1Z8vRIixNDJo0NYpa39PfchdmgTbtfy/+VekwW//jJMJeJ98QHcJuyd3khF1rTPW6dKrPSMjeZ+k3Lw2elp1CtJB7b3ukq7MXmgCV1mvYjxecdioSRnZ9epNnU6a62wnpcfuDfEfhoaynvQEvWEvriZuuLo9Zo9EiCHmf+VclRJ39Ulq7datL5SffJ5Z6N4S5jOYDMaO0z8tw1kJI5KwtAb1UCtGqB4igZW95VXRxKTvRxHgxobA9RPzlS8T25bCX7QDmmMoM0IH0g4yE6rGI6fW3Da/ZpF260bwbX+r32/AfhI37KvlU8z5wwlWX0CF8kmxAMQ== admin@lambdasolutions.net
+    public_key: ssh-rsa some/pub/key
   #swap
     swapfile_path: /extra_swap
     swapfile_size: 2048
