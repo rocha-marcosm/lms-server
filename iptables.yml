@@ -2,7 +2,9 @@
 
     - name: check packages
       yum:
-        name: iptables-services
+        name:
+          - iptables
+          - iptables-services
         state: latest
 
     - name: Start iptables

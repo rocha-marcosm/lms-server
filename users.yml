@@ -13,3 +13,22 @@
         user: sysop
         key: "{{ public_key }}"
         state: present
+      # when: '"amazon" in ansible_product_version'
+
+    - name: Allow 'wheel' group to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        state: present
+        regexp: '^%wheel'
+        line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+
+    - name: Add group sftpusers
+      group:
+        name: sftpusers
+        state: present
+
+    - name: Add user lambda
+      user:
+        name: lambda
+        createhome: no
+        state: present

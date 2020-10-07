@@ -1,0 +1,23 @@
+[remote]
+127.0.0.1
+
+[remote:vars]
+#connection
+ansible_become=true
+ansible_become_user=root
+
+#chroot
+data_folder=/var/www/data
+
+#users
+public_key=<public_key>
+
+#swap
+swapfile_path=/extra_swap
+swapfile_size=2048
+
+#PHP
+php_version=70u
+
+#AWS Enhanced Networking
+ixgbevf_version=4.2.2

@@ -8,11 +8,17 @@
         enabled: yes
         gpgcheck: no
 
+    - name: disable default nginx
+      shell: yum module disable nginx -y
+      args:
+        warn: no
+
     - name: nginx - install packages dependencies
       yum:
         name:
           - nginx
           - php-fpm
+          - unit-php
         state: latest
         update_cache: yes
 
@@ -66,5 +72,7 @@
       selinux_permissive:
         name: httpd_t
         permissive: true
+      # when: '"amazon" in ansible_product_version'
 
-    - include: selinux.yml
+    - include_tasks: selinux.yml
+      # when: '"amazon" in ansible_product_version'

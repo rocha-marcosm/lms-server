@@ -29,4 +29,9 @@ from repo `REMI`
 
 ## To Do
 
-AWS network drivers 
+AWS network drivers
+
+moosh - not tested
+solr - not tested
+unoconv - not tested
+ 

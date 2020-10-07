@@ -1,26 +1,10 @@
 [remote]
-<some IP>
-
+# <ip_address>
+3.96.204.243
 
 [remote:vars]
 #connection
 ansible_user=centos
-ansible_ssh_private_key_file=<key file path>
-ansible_become=true
-ansible_become_user=root
-
-#chroot
-data_folder=/var/www/data
-
-#users
-public_key=<some public key>
-
-#swap
-swapfile_path=/extra_swap
-swapfile_size=2048
-
-#PHP
-php_version=7.4
-
-#AWS Enhanced Networking
-ixgbevf_version=4.2.2
+# <system_user>
+ansible_ssh_private_key_file=~/.ssh/marcos
+# <pem_file_path>

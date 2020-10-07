@@ -26,4 +26,6 @@
         path: /tmp/composer-setup.php
         state: absent
 
-        
+    # - name: check composer installation
+    #   shell: composer --version
+    #   become_user: centos

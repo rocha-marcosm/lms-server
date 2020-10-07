@@ -28,15 +28,21 @@
           - mysql-community-client
           - cups
           - ghostscript
-          # - ghostscript-cups # ???
+          # - ghostscript-cups
           # - duplicity
           - clamav
           - clamav-update
           - yum-utils
+          - dnf-utils
           - telnet
           - screen
           - wget
           - dkms
+          - libselinux
+          - libselinux-utils
+          # - libselinux-python
+          - libsemanage
+          - python3-libsemanage
         state: latest
         update_cache: yes
 
@@ -45,6 +51,7 @@
         name: antivirus_can_scan_system
         state: yes
         persistent: yes
+      # when: '"amazon" in ansible_product_version'
 
     - name: Packages - Reboot
       shell: sleep 2 && shutdown -r now
@@ -56,6 +63,6 @@
 
     - name: Packages - wait host to Reboot
       wait_for_connection:
-        delay: 10
+        delay: 5
         timeout: 300
       when: packages_reboot.changed
