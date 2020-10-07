@@ -27,9 +27,12 @@ selectable by varibale `php_version`
 
 from repo `REMI`
 
-## To Do
+## AWS ENA
 
-AWS network drivers
+ENA pre installed with CentOS 8
+
+
+## To Do
 
 moosh - not tested
 solr - not tested
