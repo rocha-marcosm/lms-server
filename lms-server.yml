@@ -15,7 +15,7 @@
     swapfile_path: /extra_swap
     swapfile_size: 2048
     # PHP '{{ php }}'
-    php_version: 7.4
+    php_version: 7.4 # '{{ php }}'
     # AWS Enhanced Networking
     # ixgbevf_version: 4.3.5
 
