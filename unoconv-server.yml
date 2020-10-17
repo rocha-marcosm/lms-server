@@ -1,39 +1,39 @@
 ---
-    - name: unoconv - Packages
-      yum:
-        name:
-          - libreoffice
-          - libreoffice-pyuno
-          - java-1.8.0-openjdk
-          - java-1.8.0-openjdk-devel
-          - java-1.8.0-openjdk-headless
-          - javamail
-        state: latest
+- name: unoconv - Packages
+  yum:
+    name:
+      - libreoffice
+      - libreoffice-pyuno
+      - java-1.8.0-openjdk
+      - java-1.8.0-openjdk-devel
+      - java-1.8.0-openjdk-headless
+      - javamail
+    state: latest
 
-    - name: unoconv - download
-      git:
-        repo: git://github.com/dagwieers/unoconv.git
-        dest: /opt/unoconv
+- name: unoconv - download
+  git:
+    repo: git://github.com/dagwieers/unoconv.git
+    dest: /opt/unoconv
 
-    - name: unoconv -  symbolic link
-      file:
-        src: /opt/unoconv/unoconv
-        dest: /usr/bin/unoconv
-        state: link
+- name: unoconv -  symbolic link
+  file:
+    src: /opt/unoconv/unoconv
+    dest: /usr/bin/unoconv
+    state: link
 
-    - name: unoconv - config
-      template:
-        src: unoconv.service
-        dest: /etc/systemd/system/unoconv.service
+- name: unoconv - config
+  template:
+    src: unoconv.service
+    dest: /etc/systemd/system/unoconv.service
 
-    - name: unoconv - start service
-      service:
-        name: unoconv
-        enabled: yes
-        state: started
+- name: unoconv - start service
+  service:
+    name: unoconv
+    enabled: true
+    state: started
 
-    - name: unoconv - selinux
-      seboolean:
-        name: httpd_execmem
-        state: yes
-        persistent: yes
+- name: unoconv - selinux
+  seboolean:
+    name: httpd_execmem
+    state: true
+    persistent: true

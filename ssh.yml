@@ -1,8 +1,7 @@
 ---
-
-    - name: ssh - sshd config
-      template:
-        src: sshd_config
-        dest: /etc/ssh/sshd_config
-      notify:
-        - restart_ssh
+- name: ssh - sshd config
+  template:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+  notify:
+    - restart_ssh

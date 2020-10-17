@@ -1,24 +1,24 @@
 ---
-    - name: fail2ban - install packages
-      yum:
-        name: fail2ban
-        state: latest
-        update_cache: yes
+- name: fail2ban - install packages
+  yum:
+    name: fail2ban
+    state: latest
+    update_cache: true
 
-    - name: fail2ban - config
-      template:
-        src: jail.local
-        dest: /etc/fail2ban/jail.local
-      register: fail2ban_config
+- name: fail2ban - config
+  template:
+    src: jail.local
+    dest: /etc/fail2ban/jail.local
+  register: fail2ban_config
 
-    - name: fail2ban - enable
-      service:
-        name: fail2ban
-        enabled: yes
-        state: started
+- name: fail2ban - enable
+  service:
+    name: fail2ban
+    enabled: true
+    state: started
 
-    - name: fail2ban - restart
-      service:
-        name: fail2ban
-        state: restarted
-      when: fail2ban_config.changed
+- name: fail2ban - restart
+  service:
+    name: fail2ban
+    state: restarted
+  when: fail2ban_config.changed

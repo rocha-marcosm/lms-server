@@ -1,63 +1,62 @@
 ---
-    - name: PHP - disable default PHP
-      shell: yum module disable php -y
-      args:
-        warn: no
+- name: PHP - disable default PHP
+  shell: yum module disable php -y
+  args:
+    warn: false
 
-    - name: PHP - Import remi GPG key.
-      rpm_key:
-        key: https://rpms.remirepo.net/RPM-GPG-KEY-remi2018
-        state: present
+- name: PHP - Import remi GPG key.
+  rpm_key:
+    key: https://rpms.remirepo.net/RPM-GPG-KEY-remi2018
+    state: present
 
-    - name: PHP - install REMI repo
-      yum:
-        name:
-          - https://rpms.remirepo.net/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
-        state: present
-        update_cache: yes
+- name: PHP - install REMI repo
+  yum:
+    name:
+      - https://rpms.remirepo.net/enterprise/remi-release-{{ ansible_distribution_major_version }}.rpm
+    state: present
+    update_cache: true
 
-    - name: enable PHP version
-      shell: yum module enable php:remi-{{ php_version }} php -y
-      args:
-        warn: no
+- name: enable PHP version
+  shell: yum module enable php:remi-{{ php_version }} php -y
+  args:
+    warn: false
 
-    - name: PHP - Install Packages
-      yum:
-        name:
-          - php-bcmath
-          - php-cli
-          - php-common
-          - php-fpm
-          - php-gd
-          - php-intl
-          - php-json
-          - php-ldap
-          - php-mbstring
-          - php-mcrypt
-          - php-mysqlnd
-          - php-opcache
-          - php-pear
-          - php-pecl-memcached
-          - php-pecl-redis
-          - php-process
-          - php-pspell
-          - php-soap
-          - php-xml
-          - php-xmlrpc
-          - php-pear
-        state: latest
-        update_cache: yes
-
-    # - name: PHP - install php70 only
-    #   yum:
-    #     name:
-    #       - php{{ php_version }}-pear
-    #     state: latest
-    #   when: php_version == "70u"
-    #
-    # - name: PHP - install php71 only
-    #   yum:
-    #     name:
-    #       - pear1u
-    #     state: latest
-    #   when: php_version == "71u"
+- name: PHP - Install Packages
+  yum:
+    name:
+      - php-bcmath
+      - php-cli
+      - php-common
+      - php-fpm
+      - php-gd
+      - php-intl
+      - php-json
+      - php-ldap
+      - php-mbstring
+      - php-mcrypt
+      - php-mysqlnd
+      - php-opcache
+      - php-pear
+      - php-pecl-memcached
+      - php-pecl-redis
+      - php-process
+      - php-pspell
+      - php-soap
+      - php-xml
+      - php-xmlrpc
+      - php-pear
+    state: latest
+    update_cache: true
+# - name: PHP - install php70 only
+#   yum:
+#     name:
+#       - php{{ php_version }}-pear
+#     state: latest
+#   when: php_version == "70u"
+#
+# - name: PHP - install php71 only
+#   yum:
+#     name:
+#       - pear1u
+#     state: latest
+#   when: php_version == "71u"

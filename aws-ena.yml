@@ -1,76 +1,76 @@
 ---
-    - name: AWS - install packages dependencies
-      yum:
-        name:
-          - python2-pip
-          - python-wheel
-          - kernel-devel
-        state: latest
+- name: AWS - install packages dependencies
+  yum:
+    name:
+      - python2-pip
+      - python-wheel
+      - kernel-devel
+    state: latest
 
-    - name: AWS - install aws cli
-      command: pip install awscli
+- name: AWS - install aws cli
+  command: pip install awscli
 
-    - name: AWS - check ENA
-      command: dkms status -m amzn-drivers
-      register: check_ena
+- name: AWS - check ENA
+  command: dkms status -m amzn-drivers
+  register: check_ena
 
-    - name: AWS - check ENA debug
-      debug: msg="{{ check_ena.stdout }}"
+- name: AWS - check ENA debug
+  debug: msg="{{ check_ena.stdout }}"
 
-    - name: AWS - clone ENA repo
-      git:
-        repo: https://github.com/amzn/amzn-drivers
-        dest: /dev/shm/amzn-drivers
+- name: AWS - clone ENA repo
+  git:
+    repo: https://github.com/amzn/amzn-drivers
+    dest: /dev/shm/amzn-drivers
 
-    - name: AWS - move ena driver
-      command: mv /dev/shm/amzn-drivers/ /usr/src/amzn-drivers-1.0.0
+- name: AWS - move ena driver
+  command: mv /dev/shm/amzn-drivers/ /usr/src/amzn-drivers-1.0.0
 
-    - name: AWS - Install dkms.conf
-      template:
-        src: dkms-ena.conf
-        dest: /usr/src/amzn-drivers-1.0.0/dkms.conf
+- name: AWS - Install dkms.conf
+  template:
+    src: dkms-ena.conf
+    dest: /usr/src/amzn-drivers-1.0.0/dkms.conf
 
-    - name: AWS - Add module via dkms
-      command: dkms add -m amzn-drivers -v 1.0.0
-      register: add_aws_module
-      when: check_ena.stdout == ""
+- name: AWS - Add module via dkms
+  command: dkms add -m amzn-drivers -v 1.0.0
+  register: add_aws_module
+  when: check_ena.stdout == ""
 
-    - name: AWS - Build module via dkms
-      command: dkms build -m amzn-drivers -v 1.0.0
-      register: build_aws_module
-      when: add_aws_module.changed
+- name: AWS - Build module via dkms
+  command: dkms build -m amzn-drivers -v 1.0.0
+  register: build_aws_module
+  when: add_aws_module.changed
 
-    - name: AWS - Install module via dkms
-      command: dkms install -m amzn-drivers -v 1.0.0
-      register: install_aws_module
-      when: build_aws_module.changed
+- name: AWS - Install module via dkms
+  command: dkms install -m amzn-drivers -v 1.0.0
+  register: install_aws_module
+  when: build_aws_module.changed
 
-    - name: AWS - update module dependencies
-      command: depmod
-      when: install_aws_module.changed
+- name: AWS - update module dependencies
+  command: depmod
+  when: install_aws_module.changed
 
-    - name: AWS - rebuild boot initramfs
-      command: dracut -f
-      register: rebuild_initramfs
-      when: install_aws_module.changed
+- name: AWS - rebuild boot initramfs
+  command: dracut -f
+  register: rebuild_initramfs
+  when: install_aws_module.changed
 
-    - name: AWS - disable predictable Network
-      command: sed -i '/^GRUB\_CMDLINE\_LINUX/s/\"$/\ net\.ifnames\=0\"/' /etc/default/grub
+- name: AWS - disable predictable Network
+  command: sed -i '/^GRUB\_CMDLINE\_LINUX/s/\"$/\ net\.ifnames\=0\"/' /etc/default/grub
 
-    - name: AWS - update grub
-      command: grub2-mkconfig -o /boot/grub2/grub.cfg
-      register: upudate_grub
-      when: rebuild_initramfs.changed
+- name: AWS - update grub
+  command: grub2-mkconfig -o /boot/grub2/grub.cfg
+  register: upudate_grub
+  when: rebuild_initramfs.changed
 
-    - name: AWS - Reboot
-      shell: sleep 2 && shutdown -r now
-      async: 1
-      poll: 0
-      register: aws_reboot
-      when: upudate_grub.changed
+- name: AWS - Reboot
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+  register: aws_reboot
+  when: upudate_grub.changed
 
-    - name: AWS - wait host to Reboot
-      wait_for_connection:
-        delay: 5
-        timeout: 300
-      when: aws_reboot.changed
+- name: AWS - wait host to Reboot
+  wait_for_connection:
+    delay: 5
+    timeout: 300
+  when: aws_reboot.changed

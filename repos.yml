@@ -1,37 +1,36 @@
 ---
+- name: Add repository EPEL
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-{{ ansible_distribution_major_version }}&arch=$basearch
+    gpgkey: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
+    state: present
+    gpgcheck: true
+    enabled: true
 
-    - name: Add repository EPEL
-      yum_repository:
-        name: epel
-        description: EPEL YUM repo
-        mirrorlist: https://mirrors.fedoraproject.org/metalink?repo=epel-{{ ansible_distribution_major_version }}&arch=$basearch
-        gpgkey: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}
-        state: present
-        gpgcheck: yes
-        enabled: yes
+# - name: Add repository IUS
+#   yum_repository:
+#     name: ius
+#     description: IUS YUM repo
+#     mirrorlist: https://mirrors.iuscommunity.org/mirrorlist/?repo=ius-centos{{ ansible_distribution_major_version }}&arch=$basearch&protocol=http
+#     gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
+#     state: present
+#     gpgcheck: true
+#     enabled: true
 
-    # - name: Add repository IUS
-    #   yum_repository:
-    #     name: ius
-    #     description: IUS YUM repo
-    #     mirrorlist: https://mirrors.iuscommunity.org/mirrorlist/?repo=ius-centos{{ ansible_distribution_major_version }}&arch=$basearch&protocol=http
-    #     gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
-    #     state: present
-    #     gpgcheck: yes
-    #     enabled: yes
+- name: MySQL 5.7 Community Server
+  yum_repository:
+    name: mysql57-community
+    description: MySQL 5.7 Community Server
+    baseurl: http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
+    enabled: true
+    gpgcheck: true
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
 
-    - name: MySQL 5.7 Community Server
-      yum_repository:
-        name: mysql57-community
-        description: MySQL 5.7 Community Server
-        baseurl: http://repo.mysql.com/yum/mysql-5.7-community/el/7/$basearch/
-        enabled: yes
-        gpgcheck: yes
-        gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-mysql
-
-    - name: Add Mysql GPG-Key
-      copy:
-        src: files/RPM-GPG-KEY-mysql
-        dest: /etc/pki/rpm-gpg/
-        owner: root
-        group: root
+- name: Add Mysql GPG-Key
+  copy:
+    src: files/RPM-GPG-KEY-mysql
+    dest: /etc/pki/rpm-gpg/
+    owner: root
+    group: root

@@ -1,68 +1,67 @@
 ---
+- name: Upgrade Packages
+  yum:
+    name: "*"
+    state: latest
+    update_cache: true
+  register: update_packages
 
-    - name: Upgrade Packages
-      yum:
-        name: '*'
-        state: latest
-        update_cache: yes
-      register: update_packages
+- name: disable default MySQL
+  shell: yum module disable mysql -y
+  args:
+    warn: false
 
-    - name: disable default MySQL
-      shell: yum module disable mysql -y
-      args:
-        warn: no
+- name: Install Packages
+  yum:
+    name:
+      - "@Development tools"
+      - rsync
+      - git
+      - zip
+      - unzip
+      - vim
+      - htop
+      - vnstat
+      # - tmux
+      # - mc
+      - mysql-community-client
+      - cups
+      - ghostscript
+      # - ghostscript-cups
+      # - duplicity
+      - clamav
+      - clamav-update
+      - yum-utils
+      - dnf-utils
+      - telnet
+      - screen
+      - wget
+      - dkms
+      - libselinux
+      - libselinux-utils
+      # - libselinux-python
+      - libsemanage
+      - python3-libsemanage
+    state: latest
+    update_cache: true
 
-    - name: Install Packages
-      yum:
-        name:
-          - "@Development tools"
-          - rsync
-          - git
-          - zip
-          - unzip
-          - vim
-          - htop
-          - vnstat
-          # - tmux
-          # - mc
-          - mysql-community-client
-          - cups
-          - ghostscript
-          # - ghostscript-cups
-          # - duplicity
-          - clamav
-          - clamav-update
-          - yum-utils
-          - dnf-utils
-          - telnet
-          - screen
-          - wget
-          - dkms
-          - libselinux
-          - libselinux-utils
-          # - libselinux-python
-          - libsemanage
-          - python3-libsemanage
-        state: latest
-        update_cache: yes
+- name: Packages - selinux for antivirus
+  seboolean:
+    name: antivirus_can_scan_system
+    state: true
+    persistent: true
 
-    - name: Packages - selinux for antivirus
-      seboolean:
-        name: antivirus_can_scan_system
-        state: yes
-        persistent: yes
-      # when: '"amazon" in ansible_product_version'
+# when: '"amazon" in ansible_product_version'
+- name: Packages - Reboot
+  shell: sleep 2 && shutdown -r now
+  async: 1
+  poll: 0
+  register: packages_reboot
+  when: update_packages.changed
 
-    - name: Packages - Reboot
-      shell: sleep 2 && shutdown -r now
-      async: 1
-      poll: 0
-      register: packages_reboot
-      when: update_packages.changed
-      # ignore_errors: true
-
-    - name: Packages - wait host to Reboot
-      wait_for_connection:
-        delay: 5
-        timeout: 300
-      when: packages_reboot.changed
+  # ignore_errors: true
+- name: Packages - wait host to Reboot
+  wait_for_connection:
+    delay: 5
+    timeout: 300
+  when: packages_reboot.changed

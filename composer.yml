@@ -1,31 +1,30 @@
 ---
-    - name: download composer
-      get_url:
-        url: https://getcomposer.org/installer
-        dest: /tmp/composer-setup.php
-        mode: 0700
+- name: download composer
+  get_url:
+    url: https://getcomposer.org/installer
+    dest: /tmp/composer-setup.php
+    mode: 0700
 
-    - name: install composer
-      command: php composer-setup.php --install-dir=/usr/local/sbin --filename=composer
-      args:
-        chdir: /tmp/
+- name: install composer
+  command: php composer-setup.php --install-dir=/usr/local/sbin --filename=composer
+  args:
+    chdir: /tmp/
 
-    - name: rename composer.phar to composer
-      command: mv /usr/local/sbin/composer.phar /usr/local/sbin/composer
-      args:
-        creates: /usr/local/sbin/composer
+- name: rename composer.phar to composer
+  command: mv /usr/local/sbin/composer.phar /usr/local/sbin/composer
+  args:
+    creates: /usr/local/sbin/composer
 
-    - name: make composer executable
-      file:
-        path: /usr/local/sbin/composer
-        mode: a+x
-        state: file
+- name: make composer executable
+  file:
+    path: /usr/local/sbin/composer
+    mode: a+x
+    state: file
 
-    - name: delete downloaded file
-      file:
-        path: /tmp/composer-setup.php
-        state: absent
-
-    # - name: check composer installation
-    #   shell: composer --version
-    #   become_user: centos
+- name: delete downloaded file
+  file:
+    path: /tmp/composer-setup.php
+    state: absent
+# - name: check composer installation
+#   shell: composer --version
+#   become_user: centos
