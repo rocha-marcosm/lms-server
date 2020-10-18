@@ -45,7 +45,10 @@ jobs:
           python-version: "3.x"
 
       - name: Install test dependencies.
-        run: pip3 install molecule molecule-docker docker yamllint ansible-lint
+        run: pip3 install molecule molecule-docker docker yamllint ansible-lint # ansible
+
+      # - name: Install remote roles
+      #   run: ansible-galaxy install dev-sec.os-hardening
 
       - name: Run Molecule tests.
         run: molecule test

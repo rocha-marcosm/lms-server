@@ -10,4 +10,5 @@ skip_list:
   - '305'  # Use shell only when shell functionality is required
 exclude_paths:
   - .git/
+  - ${HOME}/.ansible/roles/
 

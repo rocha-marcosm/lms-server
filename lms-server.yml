@@ -4,6 +4,7 @@
   become_user: root
 
   roles:
+    # - dev-sec.os-hardening
     - lms
 
   tasks:
