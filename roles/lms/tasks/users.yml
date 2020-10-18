@@ -33,3 +33,9 @@
     name: lambda
     createhome: false
     state: present
+
+- name: data folder
+  file:
+    path: "{{ data_folder }}"
+    state: directory
+    mode: 0755
