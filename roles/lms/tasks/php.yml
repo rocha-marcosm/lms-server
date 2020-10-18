@@ -45,18 +45,18 @@
       - php-xml
       - php-xmlrpc
       - php-pear
-    state: latest
+    state: present
     update_cache: true
 # - name: PHP - install php70 only
 #   yum:
 #     name:
 #       - php{{ php_version }}-pear
-#     state: latest
+#     state: present
 #   when: php_version == "70u"
 #
 # - name: PHP - install php71 only
 #   yum:
 #     name:
 #       - pear1u
-#     state: latest
+#     state: present
 #   when: php_version == "71u"

@@ -4,15 +4,16 @@
     name:
       - libcurl-devel
       - libxml2-devel
-      - php{{ php_version }}-devel
-    state: latest
+      - php-devel
+    state: present
 
 - name: solr - install module
   pear:
     name: pecl/solr
-    state: latest
+    state: present
 
 - name: solr - enable module
   copy:
     content: "extension=solr.so"
     dest: /etc/php.d/solr.ini
+    mode: 0644

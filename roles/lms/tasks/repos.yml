@@ -34,3 +34,4 @@
     dest: /etc/pki/rpm-gpg/
     owner: root
     group: root
+    mode: 0644

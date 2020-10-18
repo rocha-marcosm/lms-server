@@ -1,10 +1,12 @@
 ---
 - name: Upgrade Packages
-  yum:
+  dnf:
     name: "*"
     state: latest
-    update_cache: true
+    # update_cache: true
   register: update_packages
+  when:
+    - not test_mode
 
 - name: disable default MySQL
   shell: yum module disable mysql -y
@@ -12,7 +14,7 @@
     warn: false
 
 - name: Install Packages
-  yum:
+  dnf:
     name:
       - "@Development tools"
       - rsync
@@ -42,26 +44,5 @@
       # - libselinux-python
       - libsemanage
       - python3-libsemanage
-    state: latest
-    update_cache: true
-
-- name: Packages - selinux for antivirus
-  seboolean:
-    name: antivirus_can_scan_system
-    state: true
-    persistent: true
-
-# when: '"amazon" in ansible_product_version'
-- name: Packages - Reboot
-  shell: sleep 2 && shutdown -r now
-  async: 1
-  poll: 0
-  register: packages_reboot
-  when: update_packages.changed
-
-  # ignore_errors: true
-- name: Packages - wait host to Reboot
-  wait_for_connection:
-    delay: 5
-    timeout: 300
-  when: packages_reboot.changed
+    state: present
+    # update_cache: true

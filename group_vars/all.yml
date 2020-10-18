@@ -1,0 +1,10 @@
+---
+test_mode: false
+ansible_become: true
+ansible_become_user: root
+data_folder: /var/www/data
+public_key: <public_key>
+swapfile_path: /extra_swap
+swapfile_size: 2048
+php_version: "{{ php }}"
+# ixgbevf_version: 4.3.5 # AWS Enhanced Networking

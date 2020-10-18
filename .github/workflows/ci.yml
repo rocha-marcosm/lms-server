@@ -1,6 +1,6 @@
 ---
 name: CI
-"on":
+on:
   pull_request:
   push:
     branches:
@@ -8,14 +8,29 @@ name: CI
       - molecule
 
 jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+    container: geerlingguy/docker-centos8-ansible:testing
+
+    steps:
+      - name: Check out the codebase.
+        uses: actions/checkout@v2
+
+      - name: yamllint
+        run: yamllint .
+
+      - name: ansiblie-lint
+        run: ansible-lint lms-server.yml
+
   test:
     name: Molecule
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        distro:
-          - centos8
-          # - debian10
+    # strategy:
+    #   matrix:
+    #     distro:
+    #       - centos8
+    #       - debian10
 
     steps:
       - name: Check out the codebase.

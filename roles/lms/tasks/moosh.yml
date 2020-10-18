@@ -3,11 +3,13 @@
   file:
     path: /usr/share/moosh/
     state: directory
+    mode: 0755
 
 - name: download moosh
   git:
     repo: git://github.com/tmuras/moosh.git
     dest: /usr/share/moosh
+    version: "0.32"
 
 - name: moosh install
   shell: /usr/local/sbin/composer install

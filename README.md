@@ -1,6 +1,8 @@
 # lms-server
 Ansible for base OS
 
+![example workflow name](https://github.com/rocha-marcosm/lms-server/workflows/CI/badge.svg)
+
 ## Usage
 
 ```bash

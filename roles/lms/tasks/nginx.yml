@@ -13,12 +13,12 @@
     warn: false
 
 - name: nginx - install packages dependencies
-  yum:
+  dnf:
     name:
       - nginx
       - php-fpm
       - unit-php
-    state: latest
+    state: present
     update_cache: true
 
 - name: nginx - start php-fpm service
@@ -26,12 +26,14 @@
     name: php-fpm
     enabled: true
     state: started
+  when: not test_mode
 
 - name: nginx - start nginx service
   service:
     name: nginx
     enabled: true
     state: started
+  when: not test_mode
 
 - name: nginx - generate ssl dhparam
   shell: openssl dhparam -out /etc/nginx/dhparam.pem 2048
@@ -43,34 +45,30 @@
   template:
     src: www.conf
     dest: /etc/php-fpm.d/www.conf
+    mode: 0644
   register: php_fpm_config
+  notify:
+    - restart_php-fpm
 
 - name: nginx - Install nginx.conf
   template:
     src: nginx.conf
     dest: /etc/nginx/nginx.conf
+    mode: 0644
   register: nginx_config
+  notify:
+    - restart_nginx
+# - name: nginx - restart_php-fpm
+#   service:
+#     name: php-fpm
+#     state: restarted
 
-- name: nginx - restart_php-fpm
-  service:
-    name: php-fpm
-    state: restarted
-
-- name: nginx - restart nginx
-  service:
-    name: nginx
-    state: restarted
-
+# - name: nginx - restart nginx
+#   service:
+#     name: nginx
+#     state: restarted
 # - name: nginx - add user nginx to group php-fpm
 #   user:
 #     name: nginx
 #     groups: php-fpm
 #     append: true
-
-- name: nginx - selinux
-  selinux_permissive:
-    name: httpd_t
-    permissive: true
-# when: '"amazon" in ansible_product_version'
-- include_tasks: selinux.yml
-# when: '"amazon" in ansible_product_version'

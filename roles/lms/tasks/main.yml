@@ -1,0 +1,17 @@
+---
+- include_tasks: repos.yml
+- include_tasks: packages.yml
+- include_tasks: swap.yml
+- include_tasks: users.yml
+- include_tasks: ssh.yml
+- include_tasks: firewalld.yml
+- include_tasks: fail2ban.yml
+- include_tasks: php.yml
+- include_tasks: composer.yml
+- include_tasks: moosh.yml
+# - include_tasks: aws-ena.yml
+- include_tasks: nginx.yml
+- include_tasks: solr.yml
+- include_tasks: unoconv-server.yml
+- include_tasks: selinux.yml
+  when: not test_mode

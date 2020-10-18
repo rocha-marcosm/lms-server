@@ -1,0 +1,12 @@
+---
+extends: default
+
+rules:
+  line-length:
+    max: 800
+    level: warning
+  comments:
+    min-spaces-from-content: 1
+
+ignore: |
+ .github/

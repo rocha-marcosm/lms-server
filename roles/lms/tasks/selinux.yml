@@ -1,4 +1,10 @@
 ---
+- name: selinux - httpd
+  selinux_permissive:
+    name: httpd_t
+    permissive: true
+# when: '"amazon" in ansible_product_version'
+
 - name: selinux - http network connection
   seboolean:
     name: httpd_can_network_connect
@@ -26,5 +32,11 @@
 - name: selinux - http connect nfs
   seboolean:
     name: httpd_use_nfs
+    state: true
+    persistent: true
+
+- name: selinux - antivirus
+  seboolean:
+    name: antivirus_can_scan_system
     state: true
     persistent: true

@@ -12,6 +12,8 @@
     user: sysop
     key: "{{ public_key }}"
     state: present
+  when:
+    - not test_mode
 
 # when: '"amazon" in ansible_product_version'
 - name: Allow 'wheel' group to have passwordless sudo

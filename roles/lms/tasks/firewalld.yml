@@ -3,7 +3,7 @@
   yum:
     name:
       - firewalld
-    state: latest
+    state: present
 
 - name: firewalld - start service
   service:

@@ -1,0 +1,9 @@
+---
+- name: sshd config
+  template:
+    src: sshd_config
+    dest: /etc/ssh/sshd_config
+    mode: 0644
+  register: sshd_config
+  notify:
+    - sshd_restart

@@ -1,19 +1,20 @@
 ---
 - name: unoconv - Packages
-  yum:
+  dnf:
     name:
-      - libreoffice
+      - libreoffice-core
       - libreoffice-pyuno
       - java-1.8.0-openjdk
       - java-1.8.0-openjdk-devel
       - java-1.8.0-openjdk-headless
-      - javamail
-    state: latest
+    state: present
 
+# Alternative? https://centos.pkgs.org/8/epel-x86_64/unoconv-0.9.0-2.el8.noarch.rpm.html
 - name: unoconv - download
   git:
     repo: git://github.com/dagwieers/unoconv.git
     dest: /opt/unoconv
+    version: 0.9.0
 
 - name: unoconv -  symbolic link
   file:
@@ -25,6 +26,7 @@
   template:
     src: unoconv.service
     dest: /etc/systemd/system/unoconv.service
+    mode: 0644
 
 - name: unoconv - start service
   service:
@@ -37,3 +39,5 @@
     name: httpd_execmem
     state: true
     persistent: true
+  when:
+    - not test_mode

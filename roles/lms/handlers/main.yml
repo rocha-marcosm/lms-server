@@ -1,0 +1,28 @@
+---
+- name: sshd_restart
+  service:
+    name: sshd
+    state: restarted
+  when: not test_mode
+
+- name: fail2ban_restart
+  service:
+    name: fail2ban
+    state: restarted
+  when: not test_mode
+
+- name: restart_php-fpm
+  service:
+    name: php-fpm
+    state: restarted
+  when: not test_mode
+
+- name: restart_nginx
+  service:
+    name: nginx
+    state: restarted
+  when: not test_mode
+
+- name: reboot
+  reboot:
+#   # shell: sleep 2 && shutdown -r now
