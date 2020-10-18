@@ -22,7 +22,7 @@
     warn: false
 
 - name: PHP - Install Packages
-  yum:
+  dnf:
     name:
       - php-bcmath
       - php-cli
@@ -47,16 +47,3 @@
       - php-pear
     state: present
     update_cache: true
-# - name: PHP - install php70 only
-#   yum:
-#     name:
-#       - php{{ php_version }}-pear
-#     state: present
-#   when: php_version == "70u"
-#
-# - name: PHP - install php71 only
-#   yum:
-#     name:
-#       - pear1u
-#     state: present
-#   when: php_version == "71u"

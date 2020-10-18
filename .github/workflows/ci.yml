@@ -19,11 +19,14 @@ jobs:
 
       - name: yamllint
         run: yamllint .
+        shell: bash
 
       - name: ansiblie-lint
         run: ansible-lint lms-server.yml
+        shell: bash
 
   test:
+    needs: lint
     name: Molecule
     runs-on: ubuntu-latest
     # strategy:

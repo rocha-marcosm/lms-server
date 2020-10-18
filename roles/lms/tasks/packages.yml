@@ -3,7 +3,7 @@
   dnf:
     name: "*"
     state: latest
-    # update_cache: true
+    update_cache: true
   register: update_packages
   when:
     - not test_mode
@@ -45,4 +45,4 @@
       - libsemanage
       - python3-libsemanage
     state: present
-    # update_cache: true
+    update_cache: true

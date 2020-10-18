@@ -12,18 +12,15 @@
     group: root
     mode: 0600
 
-# when: write_swapfile.changed
 - name: Make swap file
   command: mkswap {{ swapfile_path }}
   register: make_swapfile
 
-# when: write_swapfile.changed
 - name: Enable swap
   command: swapon {{ swapfile_path }}
   when:
     - not test_mode
 
-# when: make_swapfile.changed
 - name: Write swap entry in fstab
   mount:
     path: falsene

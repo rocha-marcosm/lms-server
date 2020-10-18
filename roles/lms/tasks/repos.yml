@@ -9,16 +9,6 @@
     gpgcheck: true
     enabled: true
 
-# - name: Add repository IUS
-#   yum_repository:
-#     name: ius
-#     description: IUS YUM repo
-#     mirrorlist: https://mirrors.iuscommunity.org/mirrorlist/?repo=ius-centos{{ ansible_distribution_major_version }}&arch=$basearch&protocol=http
-#     gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
-#     state: present
-#     gpgcheck: true
-#     enabled: true
-
 - name: MySQL 5.7 Community Server
   yum_repository:
     name: mysql57-community
@@ -30,7 +20,7 @@
 
 - name: Add Mysql GPG-Key
   copy:
-    src: files/RPM-GPG-KEY-mysql
+    src: RPM-GPG-KEY-mysql
     dest: /etc/pki/rpm-gpg/
     owner: root
     group: root

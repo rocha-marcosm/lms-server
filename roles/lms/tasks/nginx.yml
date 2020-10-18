@@ -58,17 +58,3 @@
   register: nginx_config
   notify:
     - restart_nginx
-# - name: nginx - restart_php-fpm
-#   service:
-#     name: php-fpm
-#     state: restarted
-
-# - name: nginx - restart nginx
-#   service:
-#     name: nginx
-#     state: restarted
-# - name: nginx - add user nginx to group php-fpm
-#   user:
-#     name: nginx
-#     groups: php-fpm
-#     append: true
