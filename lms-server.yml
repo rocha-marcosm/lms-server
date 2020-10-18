@@ -3,11 +3,19 @@
   become: true
   become_user: root
 
-  roles:
-    # - dev-sec.os-hardening
-    - lms
+  # roles:
+  #   - lms
 
   tasks:
+    - name: Include dev-sec.os-hardening role
+      include_role:
+        name: dev-sec.os-hardening
+      when: not test_mode
+
+    - name: Include LMS role
+      include_role:
+        name: lms
+
     - name: data folder
       file:
         path: "{{ data_folder }}"
