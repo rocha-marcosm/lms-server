@@ -1,0 +1,50 @@
+stages:
+  - lint
+  # - test
+  - build
+
+lint:
+  stage: lint
+  image: alpine
+  before_script:
+    - apk add yamllint ansible-lint
+  script:
+    - cd lms-server
+    - yamllint .
+    - ansible-lint lms-server.yml
+
+# test:
+#   stage: test
+
+.build: &build_template
+  image: centos:8
+  before_script:
+    - echo 'Installing epel-release'
+    - dnf install epel-release -y
+    - echo 'Installing packages for ansible setup'
+    - dnf install ansible unzip openssl openssh-clients -y
+    - echo 'Installing packer'
+    - dnf install yum-utils -y
+    - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+    - dnf install packer -y
+  script:
+    - /usr/bin/ansible-galaxy collection install devsec.hardening
+    - /usr/bin/packer build packer.json
+
+build_moodle:
+  stage: build
+  <<: *build_template
+  variables:
+    USER: "centos"
+    PHP_VERSION: "7.3"
+    LMS_TYPE: "moodle"
+    LOCAL_USER: "true"
+
+build_totara:
+  stage: build
+  <<: *build_template
+  variables:
+    USER: "centos"
+    PHP_VERSION: "7.3"
+    LMS_TYPE: "totara"
+    LOCAL_USER: "true"

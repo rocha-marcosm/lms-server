@@ -1,0 +1,36 @@
+---
+- name: CloudWatch Monitoring - install required packages
+  dnf:
+    name:
+      - collectd
+    state: present
+
+- name: CloudWatch Monitoring - install SSM agent
+  yum:
+    name: https://s3.us-west-2.amazonaws.com/amazon-ssm-us-west-2/latest/linux_amd64/amazon-ssm-agent.rpm
+    state: present
+    disable_gpg_check: true
+
+- name: CloudWatch Monitoring - install cloudwatch agent
+  yum:
+    name: https://s3.amazonaws.com/amazoncloudwatch-agent/centos/amd64/latest/amazon-cloudwatch-agent.rpm
+    state: present
+    disable_gpg_check: true
+
+- name: CloudWatch Monitoring - cloudwatch conf file
+  template:
+    src: amazon-cloudwatch-agent.json
+    dest: /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+    mode: 0644
+
+- name: CloudWatch Monitoring - start SSM
+  service:
+    name: amazon-ssm-agent
+    enabled: true
+    state: started
+
+- name: CloudWatch Monitoring - start CloudWatch
+  service:
+    name: amazon-cloudwatch-agent
+    enabled: true
+    state: started

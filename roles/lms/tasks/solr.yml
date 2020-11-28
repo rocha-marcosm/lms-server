@@ -1,19 +1,24 @@
 ---
+- name: solr - enable PowerTools
+  shell: yum config-manager --set-enabled PowerTools
+  args:
+    warn: false
+
 - name: solr - Install Packages
   yum:
     name:
       - libcurl-devel
       - libxml2-devel
-      - php-devel
+      - pcre-devel
+      - php-pecl-solr2
     state: present
+# - name: solr - install module
+#   pear:
+#     name: pecl/solr
+#     state: present
 
-- name: solr - install module
-  pear:
-    name: pecl/solr
-    state: present
-
-- name: solr - enable module
-  copy:
-    content: "extension=solr.so"
-    dest: /etc/php.d/solr.ini
-    mode: 0644
+# - name: solr - enable module
+#   copy:
+#     content: "extension=solr.so"
+#     dest: /etc/php.d/solr.ini
+#     mode: 0644

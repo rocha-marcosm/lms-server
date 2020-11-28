@@ -1,0 +1,97 @@
+---
+- name: iam-ssh - Check aws cli is present
+  command: aws --version
+  args:
+    warn: false
+  register: awsclicheck
+  ignore_errors: true
+
+- name: iam-ssh - install packages dependencies
+  dnf:
+    name:
+      - glibc
+      - groff-base
+      - less
+      - unzip
+      - python3
+    state: present
+  when: awsclicheck is failed
+
+- name: iam-ssh - download aws cli
+  unarchive:
+    src: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+    dest: /opt/
+    mode: 0755
+    remote_src: true
+    creates: /opt/aws/install
+  when: awsclicheck is failed
+
+- name: iam-ssh - install aws-cli
+  command: /opt/aws/install
+  args:
+    warn: false
+  when: awsclicheck is failed
+
+- name: iam-ssh - check selinux module
+  command: semodule -l
+  args:
+    warn: false
+  register: check_semodule
+  when: ansible_distribution == "CentOS"
+
+- name: iam-ssh - copy semodule pp
+  copy:
+    src: files/sshAuthorizedKeysCommand.pp
+    dest: /opt/sshAuthorizedKeysCommand.pp
+    mode: 0644
+  when:
+    - "'sshAuthorizedKeysCommand' not in check_semodule.stdout"
+    - ansible_distribution == "CentOS"
+
+- name: iam-ssh - copy semodule te
+  copy:
+    src: files/sshAuthorizedKeysCommand.te
+    dest: /opt/sshAuthorizedKeysCommand.te
+    mode: 0644
+  when:
+    - "'sshAuthorizedKeysCommand' not in check_semodule.stdout"
+    - ansible_distribution == "CentOS"
+
+- name: iam-ssh - install ssh selinux module
+  command: semodule -i sshAuthorizedKeysCommand.pp
+  args:
+    chdir: /opt/
+    warn: false
+  register: semodule
+  when:
+    - ansible_distribution == "CentOS"
+    - "'sshAuthorizedKeysCommand' not in check_semodule.stdout"
+
+- name: iam-ssh - ssh key script
+  template:
+    src: iam-ssh.sh
+    dest: /opt/iam-ssh.sh
+    owner: root
+    group: root
+    mode: 0755
+  register: key_script
+
+- name: iam-ssh - adding AuthorizedKeysCommand
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^AuthorizedKeysCommand "
+    insertbefore: "^Subsystem"
+    line: "AuthorizedKeysCommand /opt/iam-ssh.sh"
+  register: AuthorizedKeysCommand
+  notify:
+    - sshd_restart
+
+- name: iam-ssh - adding AuthorizedKeysCommandUser
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    regexp: "^AuthorizedKeysCommandUser "
+    insertafter: "^AuthorizedKeysCommand "
+    line: "AuthorizedKeysCommandUser nobody"
+  register: AuthorizedKeysCommandUser
+  notify:
+    - sshd_restart

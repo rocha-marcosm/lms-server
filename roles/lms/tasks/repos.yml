@@ -1,4 +1,5 @@
 ---
+# fixme https://github.com/geerlingguy/ansible-role-repo-epel
 - name: Add repository EPEL
   yum_repository:
     name: epel
@@ -8,7 +9,8 @@
     state: present
     gpgcheck: true
     enabled: true
-
+# when: ansible_distribution == "CentOS"
+#
 - name: MySQL 5.7 Community Server
   yum_repository:
     name: mysql57-community

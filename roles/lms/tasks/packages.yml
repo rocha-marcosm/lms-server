@@ -24,17 +24,18 @@
       - vim
       - htop
       - vnstat
-      # - tmux
-      # - mc
+      - tmux
+      - mc
       - mysql-community-client
       - cups
       - ghostscript
       # - ghostscript-cups
-      # - duplicity
+      - duplicity
       - clamav
       - clamav-update
       - yum-utils
       - dnf-utils
+      - dnf-plugins-core
       - telnet
       - screen
       - wget

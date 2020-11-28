@@ -1,4 +1,5 @@
 ---
+# fixme https://github.com/geerlingguy/ansible-role-swap
 - name: Create swap file
   command: dd if=/dev/zero of={{ swapfile_path }} bs=1024 count={{ swapfile_size }}k
   # register: write_swapfile
